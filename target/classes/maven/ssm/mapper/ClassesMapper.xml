@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- mybatis映射文件配置 -->
+
+<!-- mybatis映射的命名空间 -->
+<mapper namespace="maven.ssm.dao.ClassesDao">
+	<!-- 在该命名空间中定义映射语句 -->
+	<!--parameterMap用来指定传入参数的类型 -->
+	<!-- resultType是直接表示返回类型的; -->
+	<!--resultMap适合使用返回值是自定义实体类 -->
+
+	<select id="GetClassesList" resultType="Classes">
+    <![CDATA[
+    SELECT * FROM CLASSES
+    ]]>
+	</select>
+
+	<!-- 一对多 -->
+	<resultMap type="Classes" id="classBean">
+		<id column="class_id" property="class_id" javaType="java.lang.Integer" />
+		<result column="class_name" property="class_name" javaType="java.lang.String" />
+		<result column="class_content" property="class_content"
+			javaType="java.lang.String" />
+
+		<!-- property: 指的是集合属性的值, ofType：指的是集合中元素的类型 -->
+		<collection property="students" ofType="Student">
+			<id column="stu_id" property="stu_id" />
+			<result column="stu_name" property="stu_name" />
+			<result column="stu_sex" property="stu_sex" />
+			<result column="stu_age" property="stu_age" />
+			<result column="stu_birthday" property="stu_birthday" />
+			<result column="stu_class" property="stu_class" />
+		</collection>
+	</resultMap>
+
+	<!-- 一对多关联查询 -->
+	<select id="GetClassesStudent" resultMap="classBean"
+		parameterType="int">
+	<![CDATA[
+	select c.*,s.* from classes c left join student s on c.class_id = s.stu_class where c.class_id=#{class_id}
+	]]>
+	</select>
+
+</mapper>

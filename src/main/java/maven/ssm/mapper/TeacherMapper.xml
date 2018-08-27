@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- mybatis映射文件配置 -->
+
+<!-- mybatis映射的命名空间 -->
+<mapper namespace="maven.ssm.dao.TeacherDao">
+	<!-- 在该命名空间中定义映射语句 -->
+	<!--parameterMap用来指定传入参数的类型 -->
+	<!-- resultType是直接表示返回类型的; -->
+	<!--resultMap适合使用返回值是自定义实体类 -->
+
+	<select id="getTeacherList" resultType="Teacher">
+    <![CDATA[
+    SELECT * FROM TEACHER
+    ]]>
+	</select>
+
+</mapper>

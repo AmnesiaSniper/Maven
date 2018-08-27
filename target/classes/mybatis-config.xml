@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<!-- mybatis配置文件 -->
+<configuration>
+	<!-- 导入属性文件 -->
+	<properties resource="source.properties"></properties>
+	<!-- 别名 -->
+	<typeAliases>
+		<typeAlias type="maven.ssm.bean.Student" alias="Student" />
+		<typeAlias type="maven.ssm.bean.Classes" alias="Classes" />
+		<typeAlias type="maven.ssm.bean.Teacher" alias="Teacher" />
+	</typeAliases>
+
+	<!-- 加载映射文件 -->
+	<mappers>
+		<mapper resource="maven/ssm/mapper/ClassesMapper.xml" />
+		<mapper resource="maven/ssm/mapper/StudentMapper.xml"/>
+		<mapper resource="maven/ssm/mapper/TeacherMapper.xml"/>
+	</mappers>
+</configuration>

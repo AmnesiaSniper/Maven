@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd">
+<!-- ＡＰＩ文档 17.5.2 Example of declarative transaction implementation -->
+
+<!-- 将mybatis交给spring管理 -->
+<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+	<!-- 需要一个数据源 -->
+	<property name="dataSource" ref="dataSource"></property>
+	<!-- 加载mybatis配置文件 -->
+	<property name="configLocation" value="classpath:mybatis-config.xml"></property>
+</bean>
+
+<!-- 将各个实例放到一个方法包里面，以下方法将会全部加在过来 -->
+<import resource="maven/ssm/spring/*.xml"/>
+
+<!-- 声明式事务管理 -->
+
+<!-- 配置事务管理 -->
+<bean id="transactionManager"
+	class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+	<property name="dataSource" ref="dataSource" />
+</bean>
+
+<!-- 配置通知，依赖事务管理 -->
+<tx:advice id="txAdvice" transaction-manager="transactionManager">
+	<!-- 通知到参数 -->
+	<tx:attributes>
+		<tx:method name="*" rollback-for="java.lang.Exception" />
+	</tx:attributes>
+</tx:advice>
+
+<!-- AOP面向切面编程 -->
+<aop:config>
+	<!-- 切点 -->
+	<aop:pointcut id="pointCut" expression="execution(* maven.ssm.service.*.*(..))" />
+	<!-- 引入通知 -->
+	<aop:advisor advice-ref="txAdvice" pointcut-ref="pointCut" />
+</aop:config>
+
+<!-- 加载数据源属性文件 -->
+<bean
+	class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+	<property name="location" value="classpath:source.properties"></property>
+</bean>
+
+<!-- 配置数据源 -->
+<bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource">
+	<property name="driverClassName" value="${driver}" />
+	<property name="url" value="${url}" />
+	<property name="username" value="${username}" />
+	<property name="password" value="${password}" />
+</bean>
+
+</beans>
